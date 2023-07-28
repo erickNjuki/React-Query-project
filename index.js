@@ -76,6 +76,31 @@ app.post('/notes', (req, res) => {
     });
   });
 
+  // /notes/:id endpoint of the method DELETE to delete a note
+
+  app.delete('/notes/:id', (req, res) => {
+    const { id } = req.params;
+  
+    db.get('SELECT * FROM notes WHERE id = ?', [id], (err, row) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: 'An error occurred, please try again later' });
+      }
+  
+      if (!row) {
+        return res.status(404).json({ success: false, message: 'Note does not exist' });
+      }
+  
+      db.run('DELETE FROM notes WHERE id = ?', [id], (error) => {
+        if (error) {
+          console.error(error);
+          return res.status(500).json({ success: false, message: 'An error occurred, please try again later' });
+        }
+  
+        return res.json({ success: true, message: 'Note deleted successfully' });
+      });
+    });
+  });
 
 app.listen(port, () => {
   console.log(`Notes app listening on port ${port}`);
