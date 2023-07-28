@@ -51,6 +51,32 @@ const db = new sqlite3.Database('data.db', (err) => {
     });
   });
 
+//  /notes endpoint of the method POST to add a note.
+app.post('/notes', (req, res) => {
+    const { title, content } = req.body;
+  
+    if (!title || !content) {
+      return res.status(400).json({ success: false, message: 'title and content are required' });
+    }
+  
+    db.run('INSERT INTO notes (title, content) VALUES (?, ?)', [title, content], function (err) {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: 'An error occurred, please try again later' });
+      }
+  
+      return res.json({
+        success: true,
+        data: {
+          id: this.lastID,
+          title,
+          content,
+        },
+      });
+    });
+  });
+
+
 app.listen(port, () => {
   console.log(`Notes app listening on port ${port}`);
 });
