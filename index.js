@@ -21,6 +21,19 @@ const db = new sqlite3.Database('data.db', (err) => {
     });
   });
 
+  // /notes endpoint of the method GET to fetch all notes
+  
+  app.get('/notes', (req, res) => {
+    db.all('SELECT * FROM notes', (err, rows) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: 'An error occurred, please try again later' });
+      }
+  
+      return res.json({ success: true, data: rows });
+    });
+  });
+
 app.listen(port, () => {
   console.log(`Notes app listening on port ${port}`);
 });
