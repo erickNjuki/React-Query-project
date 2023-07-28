@@ -1,5 +1,11 @@
-import { PlusIcon, RefreshIcon } from '@heroicons/react/solid'
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { PlusIcon, RefreshIcon } from '@heroicons/react/solid';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import Form from './form';
+import { useState } from 'react';
+
+
+
+
 
 function App() {
   const { isLoading, isError, data, error } = useQuery(['notes'], fetchNotes)
@@ -14,6 +20,11 @@ function App() {
       return data;
     })
   }
+  const [isOpen, setIsOpen] = useState(false);
+
+    function addNote () {
+  setIsOpen(true)
+}
 
   return (
     <div className="w-screen h-screen overflow-x-hidden bg-red-400 flex flex-col justify-center items-center">
@@ -32,9 +43,10 @@ function App() {
           </div>
         ))}
       </div>
-      <button className="mt-2 bg-gray-700 hover:bg-gray-600 rounded-full text-white p-3">
-        <PlusIcon className='w-5 h-5'></PlusIcon>
-      </button>
+      <button className="mt-2 bg-gray-700 hover:bg-gray-600 rounded-full text-white p-3" onClick={addNote}>
+    <PlusIcon className='w-5 h-5'></PlusIcon>
+</button>
+<Form isOpen={isOpen} setIsOpen={setIsOpen} />
     </div>
   );
 }
