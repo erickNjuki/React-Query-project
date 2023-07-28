@@ -22,7 +22,7 @@ const db = new sqlite3.Database('data.db', (err) => {
   });
 
   // /notes endpoint of the method GET to fetch all notes
-  
+
   app.get('/notes', (req, res) => {
     db.all('SELECT * FROM notes', (err, rows) => {
       if (err) {
@@ -31,6 +31,23 @@ const db = new sqlite3.Database('data.db', (err) => {
       }
   
       return res.json({ success: true, data: rows });
+    });
+  });
+
+  // /notes/:id endpoint of the method GET to fetch a note by an ID.
+
+  app.get('/notes/:id', (req, res) => {
+    db.get('SELECT * FROM notes WHERE id = ?', req.params.id, (err, row) => {
+      if (err) {
+        console.error(err);
+        return res.status(500).json({ success: false, message: 'An error occurred, please try again later' });
+      }
+  
+      if (!row) {
+        return res.status(404).json({ success: false, message: 'Note does not exist' });
+      }
+  
+      return res.json({ success: true, data: row });
     });
   });
 
